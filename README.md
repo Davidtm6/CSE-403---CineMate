@@ -11,7 +11,7 @@ Encore is a planned social movie-ranking web app that helps people track what th
 
 ## Current progress
 
-This repository contains an early ranking prototype, a draft PostgreSQL schema for Supabase, and setup/design documentation. The React app, authentication integration, social features, recommendations, and deployment are upcoming work. Architecture decisions remain provisional until the next design milestone.
+This repository contains an early ranking prototype, a clickable UI mockup, a draft PostgreSQL schema for Supabase, and setup/design documentation. The React app, authentication integration, social features, recommendations, and deployment are upcoming work. Architecture decisions remain provisional until the next design milestone.
 
 The proposed stack is **React** for the frontend, **Vercel** for hosting, and **Supabase Auth + PostgreSQL** for accounts and data. IMDb is the proposed movie-data provider, subject to confirming access and licensing.
 
@@ -25,12 +25,14 @@ docs/
 prototype/
   ranking.py                      Interactive binary-insertion ranking experiment
   test_ranking.py                 Ranking correctness and comparison-count checks
+ui-mockup/
+  index.html                      Clickable UI mockup (open in a browser; sample data only)
 supabase/
   migrations/
     20261014000000_initial.sql    Draft core tables and access policies
 ```
 
-The [living document](docs/living-document.md) tracks the design as it develops. See the [setup guide](docs/setup.md) for resource setup and limitations.
+The [living document](docs/living-document.md) tracks the design as it develops. The [UI mockup](ui-mockup/index.html) is a single self-contained page showing the My List, Feed, Rank, For You and Search screens, including the head-to-head ranking flow. See the [setup guide](docs/setup.md) for resource setup and limitations.
 
 ## Try the ranking prototype
 
