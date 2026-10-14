@@ -1,0 +1,270 @@
+<title>Encore</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: phone-sized app column, centered on desktop, full-bleed on phones. Tabs: My List, Feed, Rank (center), For You, Search. */
+:root{
+  --bg:#F2F3F7; --surface:#FFFFFF; --ink:#14161F; --muted:#6B7080; --line:#E2E4EC;
+  --accent:#E8344E; --accent-ink:#FFFFFF; --gold:#C98A0B; --soft:#FBE8EB; --good:#1E8E5A;
+  --display:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;
+  --body:'DM Sans','Helvetica Neue',Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1017; --surface:#171A24; --ink:#F1F2F7; --muted:#9097AA; --line:#272B38;
+  --accent:#FF5A70; --accent-ink:#14161F; --gold:#F0B73B; --soft:#2B1B20; --good:#4CC58A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1017; --surface:#171A24; --ink:#F1F2F7; --muted:#9097AA; --line:#272B38;
+  --accent:#FF5A70; --accent-ink:#14161F; --gold:#F0B73B; --soft:#2B1B20; --good:#4CC58A; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 var(--body);display:flex;justify-content:center}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{width:100%;max-width:430px;height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative}
+@media(min-width:500px){.app{height:min(880px,100%);margin-block:auto;border:1px solid var(--line);border-radius:28px;overflow:hidden}}
+header{padding:18px 16px 10px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.logo{font:800 24px var(--display);letter-spacing:-.02em}
+.logo{color:var(--accent)}
+.sub{color:var(--muted);font-size:12px}
+main{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 24px}
+h2{font:700 20px/1.15 var(--display);letter-spacing:-.01em;margin:0 0 4px;text-wrap:balance}
+h3{font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px}
+nav{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);padding:6px 0}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-current="page"]{color:var(--ink);font-weight:700}
+nav button[aria-current="page"] svg{stroke:var(--accent)}
+nav .rank{margin-top:-22px}
+nav .rank span.fab{width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 6px 16px rgb(232 52 78 / .35)}
+nav .rank svg{stroke:var(--accent-ink)!important;width:24px;height:24px}
+.poster{--h:200;aspect-ratio:2/3;border-radius:8px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:6px;color:#fff;
+  background:linear-gradient(160deg,hsl(var(--h) 55% 38%),hsl(calc(var(--h) + 40) 60% 16%))}
+.poster::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 75% 20%,rgb(255 255 255 / .25),transparent 45%)}
+.poster span{position:relative;font:800 10px/1.05 var(--display);text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+.row{display:grid;grid-template-columns:28px 46px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.row.new{background:var(--soft);margin-inline:-16px;padding-inline:16px}
+.pos{font:800 20px var(--display);text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)}
+.row:nth-child(-n+3) .pos{color:var(--gold)}
+.title{font-weight:700;line-height:1.2}
+.meta{color:var(--muted);font-size:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.note{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:6px;font-size:13px}
+.note b{font-family:var(--display)}
+.btn{background:var(--accent);color:var(--accent-ink);font-weight:700;border-radius:999px;padding:10px 16px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:6px 12px;font-size:12px}
+.chip{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;background:var(--soft);color:var(--accent)}
+.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 13px var(--display);color:#fff;flex:none}
+.feed{display:flex;flex-direction:column;gap:12px}
+.feed-top{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.feed-body{display:grid;grid-template-columns:64px 1fr;gap:12px}
+.rankbadge{font:800 22px var(--display);color:var(--accent)}
+.quote{margin:6px 0 0}
+.actions{display:flex;gap:16px;margin-top:12px;color:var(--muted);font-size:12px}
+.actions button{display:flex;gap:5px;align-items:center}
+.actions .on{color:var(--accent);font-weight:700}
+.comments{margin-top:10px;border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.comments p{margin:0}
+.comments b{font-weight:700}
+.cform{display:flex;gap:8px;margin-top:4px}
+input,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+.duel-head{text-align:center;margin:8px 0 16px}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.dots i{width:22px;height:4px;border-radius:2px;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.duel{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative}
+.pick{display:flex;flex-direction:column;gap:8px;text-align:center;border-radius:16px;padding:8px;border:2px solid transparent;transition:transform .15s,border-color .15s}
+.pick:hover{border-color:var(--accent);transform:translateY(-2px)}
+.pick .tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.vs{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:800 12px var(--display);z-index:2;pointer-events:none}
+.ladder{margin-top:18px;display:flex;flex-direction:column;gap:3px;font-size:12px}
+.ladder div{display:flex;gap:8px;padding:4px 8px;border-radius:8px;color:var(--muted)}
+.ladder div.cur{background:var(--soft);color:var(--ink);font-weight:700}
+.ladder div.gap{border-top:2px dashed var(--accent);padding:0;border-radius:0}
+.result{text-align:center;padding-top:8px}
+.big{font:800 64px/1 var(--display);color:var(--accent);letter-spacing:-.03em}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:12px}
+.cand{display:flex;flex-direction:column;gap:6px;text-align:left}
+.reco{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:12px;margin-bottom:10px}
+.reco p{margin:2px 0 8px}
+.why{font-size:12px;color:var(--muted)}
+.why b{color:var(--ink)}
+.search-row{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-weight:700;font-size:12px;white-space:nowrap}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;margin-top:10px}
+.compare div{border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--surface)}
+.compare i{color:var(--muted);font-style:normal}
+</style>
+
+<div class="app" id="app">
+  <header>
+    <div class="logo">Encore</div>
+    <div class="sub" id="hsub"></div>
+  </header>
+  <main id="view"></main>
+  <nav id="nav"></nav>
+</div>
+
+<script>
+const M=[
+ ['parasite','Parasite',2019,'Bong Joon-ho',200],['spirited','Spirited Away',2001,'Hayao Miyazaki',165],
+ ['pastlives','Past Lives',2023,'Celine Song',20],['whiplash','Whiplash',2014,'Damien Chazelle',35],
+ ['madmax','Mad Max: Fury Road',2015,'George Miller',18],['getout','Get Out',2017,'Jordan Peele',260],
+ ['lalaland','La La Land',2016,'Damien Chazelle',285],['inception','Inception',2010,'Christopher Nolan',215],
+ ['eeaao','Everything Everywhere All at Once',2022,'Daniels',320],['gbh','The Grand Budapest Hotel',2014,'Wes Anderson',340],
+ ['dune2','Dune: Part Two',2024,'Denis Villeneuve',30],['moonlight','Moonlight',2016,'Barry Jenkins',230],
+ ['portrait','Portrait of a Lady on Fire',2019,'Céline Sciamma',8],['arrival','Arrival',2016,'Denis Villeneuve',190],
+ ['knives','Knives Out',2019,'Rian Johnson',48],['ladybird','Lady Bird',2017,'Greta Gerwig',12],
+ ['spiderverse','Spider-Man: Into the Spider-Verse',2018,'Persichetti, Ramsey, Rothman',275],['social','The Social Network',2010,'David Fincher',150]
+].map(([id,title,year,dir,h])=>({id,title,year,dir,h}));
+const byId=Object.fromEntries(M.map(m=>[m.id,m]));
+const FRIENDS={angel:['Angel','#7C5CFA'],riel:['Riel','#0E9F8E'],maya:['Maya','#D9782B'],dev:['Dev','#3B82F6']};
+let list=['parasite','spirited','pastlives','whiplash','madmax','getout','lalaland','inception'];
+const reviews={};
+let tab='list', duel=null, justAdded=null, toast='', q='';
+const watchlist=new Set();
+const feed=[
+ {who:'angel',movie:'pastlives',rank:1,of:31,text:'Moved it above Portrait of a Lady on Fire after a very long comparison. Still not sure.',likes:6,comments:[['riel','Bold. Portrait still wins for me.']]},
+ {who:'riel',movie:'eeaao',rank:4,of:44,text:'Beat Inception, lost to Spirited Away. Seems about right.',likes:3,comments:[]},
+ {who:'maya',movie:'dune2',rank:9,of:27,text:'The sandworm scene alone put it above Arrival.',likes:2,comments:[['dev','Arrival is better and you know it.'],['maya','Fight me.']]},
+ {who:'dev',movie:'moonlight',rank:2,of:18,text:'Hardest comparison I have made here. Moonlight over La La Land, barely.',likes:8,comments:[]}
+];
+const liked=new Set();
+const recos=[
+ {id:'portrait',why:'Angel ranks it #2',via:'friend',sub:'Because Past Lives is in your top 3'},
+ {id:'moonlight',why:'Dev ranks it #2',via:'friend',sub:'Because Parasite is your #1'},
+ {id:'arrival',why:'Matches your Inception ranking',via:'you',sub:'Because Inception is in your list'},
+ {id:'eeaao',why:'Riel ranks it #4',via:'friend',sub:'Because Spirited Away is your #2'}
+];
+
+const ico={
+ list:'<path d="M8 6h12M8 12h12M8 18h12M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+ feed:'<path d="M4 5h16v11H8l-4 4z"/>',
+ rank:'<path d="M12 5v14M5 12h14"/>',
+ you:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+ search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/>'
+};
+const tabs=[['list','My List'],['feed','Feed'],['rank','Rank'],['you','For You'],['search','Search']];
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const poster=(m,extra='')=>`<div class="poster" style="--h:${m.h};${extra}"><span>${esc(m.title)}</span></div>`;
+const av=k=>`<div class="avatar" style="background:${FRIENDS[k]?FRIENDS[k][1]:'#E8344E'}">${k==='me'?'Y':FRIENDS[k][0][0]}</div>`;
+const name=k=>k==='me'?'You':FRIENDS[k][0];
+const ord=n=>'#'+n;
+function flash(t){toast=t;render();setTimeout(()=>{toast='';render()},1800)}
+
+function render(){
+  $('#nav').innerHTML=tabs.map(([k,l])=>`<button class="${k==='rank'?'rank':''}" data-tab="${k}" ${tab===k||(k==='rank'&&duel)?'aria-current="page"':''}>
+    ${k==='rank'?`<span class="fab"><svg viewBox="0 0 24 24">${ico[k]}</svg></span>`:`<svg viewBox="0 0 24 24">${ico[k]}</svg>`}${l}</button>`).join('');
+  $('#hsub').textContent={list:`${list.length} films ranked`,feed:'3 friends active today',rank:duel?'Head to head':'Add a film',you:'Picked from your ranking',search:'Find a film'}[tab];
+  $('#view').innerHTML=({list:vList,feed:vFeed,rank:vRank,you:vYou,search:vSearch})[tab]();
+  const old=document.querySelector('.toast'); if(old) old.remove();
+  if(toast) $('#app').insertAdjacentHTML('beforeend',`<div class="toast" role="status">${esc(toast)}</div>`);
+}
+
+function vList(){
+  return `<h2>Your ranking</h2><p class="sub" style="margin:0 0 12px">Ranked by head-to-head choices, so no two films ever tie.</p>
+  <div class="note"><span class="chip">Why</span><span>On a 10-point scale, two films you scored <b>8</b> sit tied. Here, one always beats the other.</span></div>
+  <div>${list.map((id,i)=>{const m=byId[id];return `<div class="row ${justAdded===id?'new':''}">
+    <div class="pos">${i+1}</div><div>${poster(m)}</div>
+    <div><div class="title">${esc(m.title)}</div><div class="meta">${m.year} · ${esc(m.dir)}</div>${reviews[id]?`<div class="meta" style="color:var(--ink);margin-top:2px">“${esc(reviews[id])}”</div>`:''}</div>
+    <button class="btn ghost sm" data-recompare="${id}" aria-label="Re-rank ${esc(m.title)}">Re-rank</button></div>`}).join('')}</div>`;
+}
+
+function vFeed(){
+  return `<h2>Friends</h2><p class="sub" style="margin:0 0 12px">Rankings and reviews from people you follow.</p>
+  <div class="feed">${feed.map((f,i)=>{const m=byId[f.movie];const k='f'+i;return `<article class="card">
+    <div class="feed-top">${av(f.who)}<div><b>${name(f.who)}</b> ranked a film<div class="meta">${['2h','5h','Yesterday','2d'][i]} ago</div></div></div>
+    <div class="feed-body">${poster(m)}<div><div class="title">${esc(m.title)}</div><div class="meta">${m.year}</div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-top:4px"><span class="rankbadge">${ord(f.rank)}</span><span class="meta">of ${f.of} films</span></div>
+      <p class="quote">${esc(f.text)}</p></div></div>
+    <div class="actions"><button data-like="${i}" class="${liked.has(i)?'on':''}">${liked.has(i)?'♥':'♡'} ${f.likes+(liked.has(i)?1:0)}</button><button data-rankthis="${f.movie}">⇅ Rank it myself</button></div>
+    <div class="comments">${f.comments.map(([w,t])=>`<p><b>${name(w)}</b> ${esc(t)}</p>`).join('')}
+      <form class="cform" data-comment="${i}"><input id="c${i}" placeholder="Reply to ${name(f.who)}" aria-label="Comment"><button class="btn sm" type="submit">Post</button></form></div></article>`}).join('')}</div>`;
+}
+
+function nextCandidates(){return M.filter(m=>!list.includes(m.id))}
+function vRank(){
+  if(!duel){
+    const c=nextCandidates();
+    return `<h2>What did you just watch?</h2><p class="sub" style="margin:0 0 14px">Pick a film. You will compare it against films you already ranked until it lands in the right spot.</p>
+    <div class="grid2">${c.slice(0,9).map(m=>`<button class="cand" data-start="${m.id}">${poster(m)}<span class="title" style="font-size:12px">${esc(m.title)}</span></button>`).join('')}</div>`;
+  }
+  if(duel.done){
+    const i=list.indexOf(duel.movie.id), above=list[i-1], below=list[i+1];
+    return `<div class="result"><div class="sub">${esc(duel.movie.title)} lands at</div><div class="big">#${i+1}</div><div class="sub" style="margin-bottom:14px">of ${list.length} films</div>
+      <div style="width:110px;margin:0 auto 14px">${poster(duel.movie)}</div>
+      <div class="compare" style="text-align:left"><div><i>Ranked above it</i><br><b>${above?esc(byId[above].title):'Nothing, it is your new #1'}</b></div><div><i>Ranked below it</i><br><b>${below?esc(byId[below].title):'Nothing, it is your last'}</b></div></div>
+      <h3 style="text-align:left">Add a review (optional)</h3>
+      <textarea id="rev" rows="3" placeholder="What made it beat ${above?esc(byId[below||above].title):'the rest'}?"></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px"><button class="btn ghost" style="flex:1" data-cancel>Discard</button><button class="btn" style="flex:2" data-save>Save to my list</button></div></div>`;
+  }
+  const mid=Math.floor((duel.lo+duel.hi)/2), other=byId[list[mid]], me=duel.movie;
+  const total=Math.ceil(Math.log2(list.length+1));
+  return `<div class="duel-head"><h2>Which did you enjoy more?</h2><div class="sub">Comparison ${duel.step} of about ${total}</div>
+    <div class="dots">${Array.from({length:total},(_,i)=>`<i class="${i<duel.step?'on':''}"></i>`).join('')}</div></div>
+    <div class="duel"><div class="vs">VS</div>
+      <button class="pick" data-win="new"><span class="tag">New</span>${poster(me)}<span class="title">${esc(me.title)}</span><span class="meta">${me.year}</span></button>
+      <button class="pick" data-win="old"><span class="tag">Your #${mid+1}</span>${poster(other)}<span class="title">${esc(other.title)}</span><span class="meta">${other.year}</span></button></div>
+    <div style="text-align:center;margin-top:14px"><button class="btn ghost sm" data-cancel>Cancel</button></div>
+    <h3>Where it could land</h3>
+    <div class="ladder">${list.map((id,i)=>`${i===duel.lo?'<div class="gap" aria-hidden="true"></div>':''}<div class="${i===mid?'cur':''}" style="${i<duel.lo||i>=duel.hi?'opacity:.35':''}"><span>${i+1}</span><span>${esc(byId[id].title)}</span></div>`).join('')}${duel.lo===list.length?'<div class="gap" aria-hidden="true"></div>':''}</div>`;
+}
+
+function vYou(){
+  return `<h2>Picked for you</h2><p class="sub" style="margin:0 0 14px">Based on your top ranked films and what your friends rank highly.</p>
+  ${recos.filter(r=>!list.includes(r.id)).map(r=>{const m=byId[r.id];return `<div class="card reco">${poster(m)}<div>
+    <div class="title">${esc(m.title)}</div><div class="meta">${m.year} · ${esc(m.dir)}</div>
+    <p class="why"><b>${esc(r.why)}</b><br>${esc(r.sub)}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-start="${m.id}">I watched it</button>
+    <button class="btn ghost sm" data-watch="${m.id}">${watchlist.has(m.id)?'✓ Watchlist':'+ Watchlist'}</button></div></div></div>`}).join('')}`;
+}
+
+function vSearch(){
+  const r=q?M.filter(m=>(m.title+m.dir).toLowerCase().includes(q.toLowerCase())):M.slice(8,14);
+  return `<h2>Search</h2><input id="q" type="search" value="${esc(q)}" placeholder="Title or director" aria-label="Search films" style="margin:8px 0 6px">
+  <h3>${q?`${r.length} result${r.length===1?'':'s'}`:'Popular with friends'}</h3>
+  ${r.map(m=>{const i=list.indexOf(m.id);return `<div class="search-row">${poster(m)}<div><div class="title">${esc(m.title)}</div><div class="meta">${m.year} · ${esc(m.dir)}</div>
+    ${i>=0?`<span class="chip" style="margin-top:4px">Your #${i+1}</span>`:`<div class="meta" style="margin-top:2px">${m.id.length%2?'Angel':'Riel'} and ${m.year%3+1} friends ranked this</div>`}</div>
+    ${i>=0?'':`<button class="btn sm" data-start="${m.id}">Rank</button>`}</div>`}).join('')||'<p class="sub">No films match. Try a director’s name.</p>'}`;
+}
+
+function startDuel(id,keep){
+  const m=byId[id];
+  if(keep) list=list.filter(x=>x!==id);
+  duel={movie:m,lo:0,hi:list.length,step:1,done:false};
+  tab='rank';
+  if(list.length===0){list.push(id);duel.done=true}
+  render();
+}
+function answer(newWins){
+  const mid=Math.floor((duel.lo+duel.hi)/2);
+  if(newWins) duel.hi=mid; else duel.lo=mid+1;
+  if(duel.lo>=duel.hi){list.splice(duel.lo,0,duel.movie.id);duel.done=true}
+  else duel.step++;
+  render();
+}
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button'); if(!t) return;
+  const d=t.dataset;
+  if(d.tab){if(d.tab==='rank'&&duel&&!duel.done){tab='rank'}else{if(duel&&duel.done&&d.tab!=='rank'){/* leave result */}tab=d.tab;if(d.tab==='rank'&&duel&&duel.done)duel=null}justAdded=d.tab==='list'?justAdded:null;render()}
+  else if(d.start) startDuel(d.start);
+  else if(d.recompare) startDuel(d.recompare,true);
+  else if(d.rankthis) startDuel(d.rankthis);
+  else if(d.win) answer(d.win==='new');
+  else if(d.cancel!==undefined){ if(duel&&duel.done){/* discard added film */list=list.filter(x=>x!==duel.movie.id)} duel=null; tab='list'; render()}
+  else if(d.save!==undefined){const r=$('#rev').value.trim(); if(r) reviews[duel.movie.id]=r; justAdded=duel.movie.id; duel=null; tab='list'; flash('Saved to your ranking')}
+  else if(d.like!==undefined){const i=+d.like; liked.has(i)?liked.delete(i):liked.add(i); render()}
+  else if(d.watch){watchlist.has(d.watch)?watchlist.delete(d.watch):watchlist.add(d.watch); render()}
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('[data-comment]'); if(!f) return; e.preventDefault();
+  const v=f.querySelector('input').value.trim(); if(!v) return;
+  feed[+f.dataset.comment].comments.push(['me',v]); render();
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='q'){q=e.target.value;const p=e.target.selectionStart;render();const n=$('#q');n.focus();n.setSelectionRange(p,p)}
+});
+render();
+</script>
